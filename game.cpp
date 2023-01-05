@@ -9,9 +9,12 @@
 
 
 //colors
+std::vector<std::vector<int>> colors;
 std::vector<int> curr_color;
 std::vector<int> yellow = {255,255,0,255};
 std::vector<int> red = {255,0,0,255};
+std::vector<int> blue = {0,0,255,255};
+std::vector<int> green = {0,255,0,255};
 std::vector<int> black = {0,0,0,255};
 
 bool paused = false;
@@ -39,7 +42,17 @@ void create_tetris()
     tetris.push_back({{1},
                       {1}});
 
+    tetris.push_back({{1,1},
+                      {1,1}});
 
+}
+
+void create_colors()
+{
+    colors.push_back(yellow);
+    colors.push_back(blue);
+    colors.push_back(green);
+    colors.push_back(red);
 }
 
 void set_matrix()
@@ -55,8 +68,8 @@ void set_matrix()
             matrix[i][j].setPosition(pos);
             matrix[i][j].setSize(sf::Vector2f(LENGTH,LENGTH));
             matrix[i][j].setFillColor(sf::Color::Black);
-            // matrix[i][j].setOutlineColor(sf::Color::Black);
-            matrix[i][j].setOutlineThickness(2);
+            matrix[i][j].setOutlineColor(sf::Color::Black);
+            matrix[i][j].setOutlineThickness(3);
             k++;
         }
     }
@@ -135,7 +148,8 @@ void tetris_fall()
 {
     if(!check_tetris(0,1))
     {
-        curr_color = red;
+        curr_color = colors[rand()%4];
+        curr_tetris_index = rand() % 4;
         set_tetris(tetris[curr_tetris_index], 4, 0); 
         return;
     }
@@ -150,7 +164,6 @@ void tetris_fall()
 
 void invert_tetris()
 {
-    std::cout<<"ok"<<std::endl;
     set_tetris_color(black);
     std::vector<std::vector<int>> t;
     for(int i=0; i<tetris[curr_tetris_index][0].size(); i++)
@@ -206,9 +219,11 @@ int main()
 {
 
     sf::RenderWindow window(sf::VideoMode(300,600), "Tetris");
-    window.setFramerateLimit(10);
+    window.setFramerateLimit(5);
 
     create_tetris();
+
+    create_colors();
 
     set_matrix();
     
